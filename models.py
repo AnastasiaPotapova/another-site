@@ -24,7 +24,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
@@ -34,8 +34,8 @@ class Massage(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    from_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    to_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    from_id = db.Column(db.Integer)
+    to_id = db.Column(db.Integer)
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
