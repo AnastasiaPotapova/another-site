@@ -1,10 +1,16 @@
 import os
 from flask import Flask
-app = Flask(__name__)
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-@app.route("/")
-def hello():
-    return "Hello from Python!"
+
+app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+from routes import *
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
