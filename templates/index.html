@@ -1,10 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Like it</title>
-</head>
-<body>
-    <h1> {{user.username}} </h1>
-</body>
-</html>
+{% extends "base.html" %}
+ 
+{% block content %}
+<h1 align="left">Профиль</h1>
+<div class="media">
+  <img class="mr-3" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
+  <div class="media-body">
+    <h5 class="mt-0"> {{user.username}} </h5>
+      <h6> {{user.id}} </h6>
+      {% if me == 0 %}
+      <a href="/edit"> edit</a>
+      {% else %}
+      {% if me.is_following(user) %}
+      <a class="btn btn-secondary" href="/unfollow/{{user.id}}">Отписаться </a>
+      <button href="/send_message"> Отправить сообщение </button>
+      {% else %}
+      <a class="btn btn-primary" href="/follow/{{user.id}}">Подписаться </a>
+      <button href="/send_message"> Отправить сообщение </button>
+      {% endif %}
+      {% endif %}
+  </div>
+</div>
+
+{% endblock %}

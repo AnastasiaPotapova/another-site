@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+ 
+{% block content %}
+    <h1>Все пользователи</h1>
+    <table>
+        {% for item in users %}
+        <tr>
+            <td>
+                <a type="button" class="btn btn-secondary" href="/index/{{item.id}}"> {{item.username}} </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
