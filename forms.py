@@ -20,5 +20,5 @@ class Post(FlaskForm):
     body = StringField('Тело поста', validators=[DataRequired()])
 
 class Msg(FlaskForm):
-    theme = StringField('Тема письма', validators=[DataRequired()])
     body = StringField('Тело письма', validators=[DataRequired()])
+    submit = SubmitField('Отправить')

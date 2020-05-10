@@ -12,10 +12,10 @@
       {% else %}
       {% if me.is_following(user) %}
       <a class="btn btn-secondary" href="/unfollow/{{user.id}}">Отписаться </a>
-      <button href="/send_message"> Отправить сообщение </button>
+      <a class="btn btn-primary" href="/dialog/{{user.id}}">Написать сообщение </a>
       {% else %}
       <a class="btn btn-primary" href="/follow/{{user.id}}">Подписаться </a>
-      <button href="/send_message"> Отправить сообщение </button>
+      <a class="btn btn-primary" href="/to_dialog/{{user.id}}">Написать сообщение </a>
       {% endif %}
       {% endif %}
   </div>

@@ -10,8 +10,8 @@ followers = db.Table(
 
 dialogs = db.Table(
     'dialogs',
-    db.Column('sender_id', db.Integer, db.ForeignKey('messages.id')),
-    db.Column('recipient_id', db.Integer, db.ForeignKey('messages.id'))
+    db.Column('sender_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('recipient_id', db.Integer, db.ForeignKey('user.id')),
 )
 
 
@@ -27,6 +27,11 @@ class User(db.Model):
         primaryjoin=(followers.c.follower_id == id),
         secondaryjoin=(followers.c.followed_id == id),
         backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
+    recipient = db.relationship(
+        'User', secondary=dialogs,
+        primaryjoin=(dialogs.c.sender_id == id),
+        secondaryjoin=(dialogs.c.recipient_id == id),
+        backref=db.backref('senders', lazy='dynamic'), lazy='dynamic')
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -49,6 +54,14 @@ class User(db.Model):
         return self.followed.filter(
             followers.c.followed_id == user.id).count() > 0
 
+    def start_dialog(self, user):
+        if not self.is_dialogging(user):
+            self.recipient.append(user)
+
+    def is_dialogging(self, user):
+        return self.recipient.filter(
+            dialogs.c.recipient_id == user.id).count() > 0
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -60,14 +73,29 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
 
+class Dialog(db.Model):
+    __tablename__ = 'dial'
+    id = db.Column(db.Integer, primary_key=True)
+    user_f = db.Column(db.Integer)
+    user_s = db.Column(db.Integer)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return '<Dialog {}>'.format(self.user_f)
+
+
 class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
     sender_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     recipient_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    dialog_id = db.Column(db.Integer, db.ForeignKey('dial.id'))
     body = db.Column(db.String(140))
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Message {}>'.format(self.body)
+
+    def size(self):
+        return len(self.body)
 

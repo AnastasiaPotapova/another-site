@@ -1,1 +1,1 @@
-web: python app.py db upgrade;
+web: python app.py;flask db upgrade;
