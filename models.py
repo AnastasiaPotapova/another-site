@@ -83,6 +83,9 @@ class Dialog(db.Model):
     def __repr__(self):
         return '<Dialog {}>'.format(self.user_f)
 
+    def check(self, user):
+        return self.user_f == user or self.user_s == user
+
 
 class Message(db.Model):
     __tablename__ = 'messages'

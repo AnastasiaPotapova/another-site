@@ -15,9 +15,9 @@ class RegistrForm(FlaskForm):
     email = StringField('Почта', validators=[DataRequired()])
     submit = SubmitField('Зарегистрироваться')
 
-class Post(FlaskForm):
-    theme = StringField('Тема поста', validators=[DataRequired()])
+class Pst(FlaskForm):
     body = StringField('Тело поста', validators=[DataRequired()])
+    submit = SubmitField('Опубликовать')
 
 class Msg(FlaskForm):
     body = StringField('Тело письма', validators=[DataRequired()])

@@ -1,8 +1,8 @@
 from flask import render_template, redirect, request, session, flash
-from flask_login import current_user, login_required
-from forms import RegistrForm, LoginForm, Msg
+from forms import RegistrForm, LoginForm, Msg, Pst
 from app import app, db
-from models import User, Message, Dialog
+from models import User, Message, Dialog, Post
+from sqlalchemy import or_
 
 
 @app.route('/logout')
@@ -30,10 +30,18 @@ def profile():
 def index(id):
     user = User.query.filter_by(id=id).first()
     me = User.query.filter_by(id=session['user_id']).first()
+    posts = Post.query.filter_by(user_id=id)
     if session['user_id'] == id:
-        return render_template('index.html', title='Страница', user=user, me=0)
+        form = Pst()
+        if form.validate_on_submit():
+            body = form.body.data
+            post = Post(user_id=id, body=body)
+            db.session.add(post)
+            db.session.commit()
+            return redirect('/index/{}'.format(id))
+        return render_template('index.html', title='Страница', user=user, me=0, form=form, posts=posts)
     else:
-        return render_template('index.html', title='Страница', user=user, me=me)
+        return render_template('index.html', title='Страница', user=user, me=me, posts=posts)
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -149,3 +157,9 @@ def dialog(di_id):
         db.session.commit()
         return redirect('/dialog/{}#end'.format(di_id))
     return render_template('message.html', title='Диалог', form=form, letters=list(letters), user=session['user_id'])
+
+
+@app.route('/dialogs', methods=['GET', 'POST'])
+def dialogs():
+    dial = Dialog.query.filter(or_(Dialog.user_f == session['user_id'], Dialog.user_s == session['user_id']))
+    return render_template('dialog.html', title='Диалоги', dialogs=dial, user=session['user_id'])
