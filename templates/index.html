@@ -4,10 +4,14 @@
 {% block content %}
 <h1 align="left">Профиль</h1>
 <div class="media">
+    {% if user.avatar %}
+    <img class="mr-3" src="{{url_for('static', filename=user.avatar)}}" alt="Generic placeholder image" width="20%">
+    {% else %}
     <img class="mr-3" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
+    {% endif %}
     <div class="media-body">
         <h5 class="mt-0"> {{user.username}} </h5>
-        <h6> {{user.id}} </h6>
+        <h6> {{user.about_me}} </h6>
         {% if me == 0 %}
         <a href="/edit"> edit</a>
         {% else %}

@@ -1,8 +1,12 @@
-from flask import render_template, redirect, request, session, flash
-from forms import RegistrForm, LoginForm, Msg, Pst
+from flask import render_template, redirect, request, session, flash, url_for
+from forms import RegistrForm, LoginForm, Msg, Pst, Edit
 from app import app, db
 from models import User, Message, Dialog, Post
 from sqlalchemy import or_
+import os
+from werkzeug import secure_filename
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 
 @app.route('/logout')
@@ -13,6 +17,8 @@ def logout():
 
 @app.route("/users", methods=['POST', 'GET'])
 def users():
+    if 'username' not in session:
+        return redirect('/login')
     user = User.query
     print(list(user))
     return render_template('users.html', title='Страница', users=list(user))
@@ -20,7 +26,7 @@ def users():
 
 @app.route("/", methods=['GET', 'POST'])
 def profile():
-    if session['user_id']:
+    if 'user_id' in session:
         return redirect('/index/{}'.format(session['user_id']))
     else:
         return redirect('/login')
@@ -28,6 +34,8 @@ def profile():
 
 @app.route("/index/<int:id>", methods=['POST', 'GET'])
 def index(id):
+    if 'username' not in session:
+        return redirect('/login')
     user = User.query.filter_by(id=id).first()
     me = User.query.filter_by(id=session['user_id']).first()
     posts = Post.query.filter_by(user_id=id)
@@ -76,6 +84,8 @@ def register():
 
 @app.route('/follow/<int:userid>', methods=['GET', 'POST'])
 def follow(userid):
+    if 'username' not in session:
+        return redirect('/login')
     user = User.query.filter_by(id=userid).first()
     me = User.query.filter_by(id=session['user_id']).first()
     if user is None:
@@ -91,6 +101,8 @@ def follow(userid):
 
 @app.route('/unfollow/<int:userid>', methods=['GET', 'POST'])
 def unfollow(userid):
+    if 'username' not in session:
+        return redirect('/login')
     user = User.query.filter_by(id=userid).first()
     me = User.query.filter_by(id=session['user_id']).first()
     if user is None:
@@ -104,6 +116,8 @@ def unfollow(userid):
 
 @app.route('/followers', methods=['GET', 'POST'])
 def followers():
+    if 'username' not in session:
+        return redirect('/login')
     me = User.query.filter_by(id=session['user_id']).first()
     users = list(me.followers)
     return render_template('users.html', title='Подписчики', users=users)
@@ -111,6 +125,8 @@ def followers():
 
 @app.route('/followed', methods=['GET', 'POST'])
 def followed():
+    if 'username' not in session:
+        return redirect('/login')
     me = User.query.filter_by(id=session['user_id']).first()
     users = list(me.followed)
     return render_template('users.html', title='Подписчики', users=users)
@@ -142,6 +158,8 @@ def to_dialog(userid):
 
 @app.route('/dialog/<int:di_id>', methods=['GET', 'POST'])
 def dialog(di_id):
+    if 'username' not in session:
+        return redirect('/login')
     form = Msg()
     letters = Message.query.filter_by(dialog_id=di_id)
     print(list(letters))
@@ -161,5 +179,26 @@ def dialog(di_id):
 
 @app.route('/dialogs', methods=['GET', 'POST'])
 def dialogs():
+    if 'username' not in session:
+        return redirect('/login')
     dial = Dialog.query.filter(or_(Dialog.user_f == session['user_id'], Dialog.user_s == session['user_id']))
     return render_template('dialog.html', title='Диалоги', dialogs=dial, user=session['user_id'])
+
+
+@app.route('/edit', methods=['GET', 'POST'])
+def edit():
+    if 'username' not in session:
+        return redirect('/login')
+    me = User.query.filter_by(id=session['user_id']).first()
+    form = Edit()
+    if form.validate_on_submit():
+        me.username = form.username.data
+        me.about_me = form.about.data
+        file = request.files['file']
+        if file:
+            filename = secure_filename(file.filename)
+            me.avatar = filename
+            file.save('static/{}'.format(filename))
+        db.session.commit()
+        return redirect('/index/{}'.format(me.id))
+    return render_template('edit.html', form=form)
