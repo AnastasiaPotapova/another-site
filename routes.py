@@ -6,7 +6,7 @@ from sqlalchemy import or_
 import os
 from werkzeug import secure_filename
 
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp'])
 
 
 @app.route('/logout')
@@ -17,7 +17,7 @@ def logout():
 
 @app.route("/users", methods=['POST', 'GET'])
 def users():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     user = User.query
     print(list(user))
@@ -34,7 +34,7 @@ def profile():
 
 @app.route("/index/<int:id>", methods=['POST', 'GET'])
 def index(id):
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     user = User.query.filter_by(id=id).first()
     me = User.query.filter_by(id=session['user_id']).first()
@@ -74,7 +74,7 @@ def register():
         username = form.username.data
         password = form.password.data
         email = form.email.data
-        user = User(username=username, email=email)
+        user = User(username=username, email=email, about_me='good luck', avatar='1.jpg')
         user.set_password(password)
         db.session.add(user)
         db.session.commit()
@@ -84,7 +84,7 @@ def register():
 
 @app.route('/follow/<int:userid>', methods=['GET', 'POST'])
 def follow(userid):
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     user = User.query.filter_by(id=userid).first()
     me = User.query.filter_by(id=session['user_id']).first()
@@ -101,7 +101,7 @@ def follow(userid):
 
 @app.route('/unfollow/<int:userid>', methods=['GET', 'POST'])
 def unfollow(userid):
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     user = User.query.filter_by(id=userid).first()
     me = User.query.filter_by(id=session['user_id']).first()
@@ -116,7 +116,7 @@ def unfollow(userid):
 
 @app.route('/followers', methods=['GET', 'POST'])
 def followers():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     me = User.query.filter_by(id=session['user_id']).first()
     users = list(me.followers)
@@ -125,7 +125,7 @@ def followers():
 
 @app.route('/followed', methods=['GET', 'POST'])
 def followed():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     me = User.query.filter_by(id=session['user_id']).first()
     users = list(me.followed)
@@ -158,7 +158,7 @@ def to_dialog(userid):
 
 @app.route('/dialog/<int:di_id>', methods=['GET', 'POST'])
 def dialog(di_id):
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     form = Msg()
     letters = Message.query.filter_by(dialog_id=di_id)
@@ -179,7 +179,7 @@ def dialog(di_id):
 
 @app.route('/dialogs', methods=['GET', 'POST'])
 def dialogs():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     dial = Dialog.query.filter(or_(Dialog.user_f == session['user_id'], Dialog.user_s == session['user_id']))
     return render_template('dialog.html', title='Диалоги', dialogs=dial, user=session['user_id'])
@@ -187,7 +187,7 @@ def dialogs():
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
-    if 'username' not in session:
+    if 'user_id' not in session:
         return redirect('/login')
     me = User.query.filter_by(id=session['user_id']).first()
     form = Edit()
