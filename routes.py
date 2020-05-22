@@ -26,7 +26,7 @@ def users():
 
 @app.route("/", methods=['GET', 'POST'])
 def profile():
-    if 'user_id' in session:
+    if 'user_id' in session and session['user_id'] != None:
         return redirect('/index/{}'.format(session['user_id']))
     else:
         return redirect('/login')
