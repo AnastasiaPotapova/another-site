@@ -8,34 +8,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <title>{{title}}</title>
+
+    <style type="text/css">
+    .container-fluid {
+        margin: 0 0px;
+        padding-left: 0px;
+        background-color: #edd5a1;
+    }
+    .container{
+        background-color: #faeac8;
+        border-radius: 20px;
+        padding-bottom: 10px;
+    }
+    .navbar{
+        background-color: #4d2e18;
+        color: #faeac8;
+        font-family: sans-serif;
+    }
+    .list-group-item{
+        background-color: #faeac8;
+        color: #4d2e18;
+    }
+    body {
+   	   background: #edd5a1;
+   	   color: #4d2e18;
+   }
+    </style>
 </head>
 <body>
     <header>
-      <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#"> Какая-то социальная сеть</a>
-      </nav>
+      <div class="navbar">
+        <h4> Какая-то социальная сеть</h4>
+      </div>
     </header>
-    <table width="100%" height="100%">
-        <tr>
-            <td align="left" width="10%">
-                <div class="list-group">
-                  <a href="/" class="list-group-item list-group-item-action">
-                    Профиль
-                  </a>
-                  <a href="/followers" class="list-group-item list-group-item-action">Подписчики</a>
-                  <a href="/followed" class="list-group-item list-group-item-action">Подписки</a>
-                  <a href="/dialogs" class="list-group-item list-group-item-action">Сообщения</a>
-                  <a href="/users" class="list-group-item list-group-item-action">Все пользователи</a>
-                  <a href="/logout" class="list-group-item list-group-item-action"> Выйти </a>
+    <div class="container-fluid">
+        <div class="row flex-xl-nowrap">
+            <div class="col-12 col-md-3 col-xl-2 bd-sidebar">
+              <div class="btn-group-vertical" align="left">
+              <a href="/" class="list-group-item list-group-item-action">Профиль</a>
+              <a href="/followers" class="list-group-item list-group-item-action">Подписчики</a>
+              <a href="/followed" class="list-group-item list-group-item-action">Подписки</a>
+              <a href="/dialogs" class="list-group-item list-group-item-action">Сообщения</a>
+              <a href="/users" class="list-group-item list-group-item-action">Все пользователи</a>
+              <a href="/logout" class="list-group-item list-group-item-action"> Выйти </a>
+            </div>
+            </div>
+            <div class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 bd-content">
+                {% if "error" in session and session['error'] != 0%}
+                <div class="alert alert-danger" role="alert">
+                    {{session["error"]}}
                 </div>
-            </td>
-            <td>
-                <!-- Begin page content -->
+                {% endif %}
                 <main role="main" class="container">
                     {% block content %}{% endblock %}
                 </main>
-            </td>
-        </tr>
-    </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

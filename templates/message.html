@@ -2,24 +2,34 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
+<style>
+    .dial {
+        height: 500px;
+        width: 100%;
+        background: #faeac8;
+        border: 0px;
+        overflow: auto;
+        margin-top: 30px;
+    }
+    .row {
+        margin-right: 0px;
+    }
+</style>
 
 <div class="container">
     <div class="row justify-content-md-center">
-        <div class="col-md-9" style="height: 500px;">
+        <div class="col-md-12">
+            <div class="dial" id="element">
             {% for item in letters %}
             {% if item.recipient_id == user %}
             <div class="row justify-content-md-end">
                 {% if item.size() > 100 %}
                 <div class="col-md-6">
-                    <div class="alert alert-primary" role="alert">
-                        {{item.body}}
-                    </div>
+                    {% include '_msg.html' %}
                 </div>
                 {% else %}
                 <div class="col-md-auto">
-                    <div class="alert alert-primary" role="alert">
-                        {{item.body}}
-                    </div>
+                    {% include '_msg.html' %}
                 </div>
                 {% endif %}
             </div>
@@ -27,20 +37,17 @@
             <div class="row justify-content-md-start">
                 {% if item.size() > 100 %}
                 <div class="col-md-6">
-                    <div class="alert alert-primary" role="alert">
-                        {{item.body}}
-                    </div>
+                    {% include '_msg.html' %}
                 </div>
                 {% else %}
                 <div class="col-md-auto">
-                    <div class="alert alert-primary" role="alert">
-                        {{item.body}}
-                    </div>
+                    {% include '_msg.html' %}
                 </div>
                 {% endif %}
             </div>
             {% endif %}
             {% endfor %}
+            </div>
             <div class="row justify-content-md-center">
                 <div class="col-md-12" id="end">
                     {{ wtf.quick_form(form, action="") }}
@@ -49,5 +56,9 @@
         </div>
     </div>
 </div>
+
+<script>
+    element.scrollTop = element.scrollHeight;
+</script>
 
 {% endblock %}

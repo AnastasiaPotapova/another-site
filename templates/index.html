@@ -2,7 +2,27 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-<h1 align="left">Профиль</h1>
+
+<style>
+    .mr-3 {
+        margin-top: -50px;
+    }
+    .container-main {
+        margin-top: 70px;
+    }
+    .col-md-6 {
+        margin-top: 10px;
+        margin-bottom: 0px;
+    }
+    img{
+        object-fit: cover;
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+    }
+</style>
+
+<div class="container-main">
 <div class="media">
     {% if user.avatar %}
     <img class="mr-3" src="{{url_for('static', filename=user.avatar)}}" alt="Generic placeholder image" width="20%">
@@ -10,7 +30,7 @@
     <img class="mr-3" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
     {% endif %}
     <div class="media-body">
-        <h5 class="mt-0"> {{user.username}} </h5>
+        <h3 class="mt-0"> {{user.username}} </h3>
         <h6> {{user.about_me}} </h6>
         {% if me == 0 %}
         <a href="/edit"> edit</a>
@@ -35,13 +55,12 @@
     {% endif %}
     {% for item in posts %}
     <div class="row justify-content-md-start">
-        <div class="col-md-6">
-            <div class="alert alert-primary" role="alert">
-                {{item.body}}
-            </div>
+        <div class="col-md-12">
+            {% include '_post.html' %}
         </div>
     </div>
     {% endfor %}
+</div>
 </div>
 
 

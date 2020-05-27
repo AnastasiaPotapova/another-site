@@ -1,0 +1,31 @@
+<style>
+    .pst {
+        margin-top: 10px;
+        margin-bottom: 5px;
+        padding: 10px;
+        background-color: #edd5a1;
+        border-radius: 10px;
+        border-width: 5px;
+        border-color: #4d2e18;
+        color: #4d2e18;
+    }
+    .img-pst{
+        object-fit: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 10px;
+    }
+</style>
+
+<div class="pst">
+    <div class="col-3">
+    {% if user.avatar %}
+    <img class="img-pst" src="{{url_for('static', filename=user.avatar)}}" alt="Generic placeholder image" width="20%">
+    {% else %}
+    <img class="img-pst" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
+    {% endif %}
+    </div>
+    <div class="col-9" id="end">
+    {{item.body}}
+    </div>
+</div>

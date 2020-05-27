@@ -22,13 +22,13 @@ class Pst(FlaskForm):
     submit = SubmitField('Опубликовать')
 
 
-class Msg(FlaskForm):
+class Msg_(FlaskForm):
     body = StringField('Тело письма', validators=[DataRequired()])
     submit = SubmitField('Отправить')
 
 
 class Edit(FlaskForm):
-    username = StringField('Логин', validators=[DataRequired()])
-    file = FileField('Файл', validators=[DataRequired()])
-    about = StringField('О себе', validators=[DataRequired()])
+    username = StringField('Логин')
+    file = FileField('Файл')
+    about = StringField('О себе')
     submit = SubmitField('Изменить')
