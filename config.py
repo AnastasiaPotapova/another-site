@@ -15,11 +15,12 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
     MAIL_SERVER = 'smtp.yandex.ru'
-    MAIL_PORT=465
+    MAIL_PORT=25
     MAIL_USE_TLS = True
-    MAIL_USERNAME = 'nast-pota@yandex.ru'
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = 'nast-pota'
     MAIL_PASSWORD = 'gjnfgjdfnast10'
-    ADMINS = ['nast-potap@mail.ru']
+    ADMINS = ['nast-pota@yandex.ru']
     LANGUAGES = ['en', 'rus']
     MS_TRANSLATOR_KEY = os.environ.get('MS_TRANSLATOR_KEY')
     ELASTICSEARCH_URL = os.environ.get('ELASTICSEARCH_URL')

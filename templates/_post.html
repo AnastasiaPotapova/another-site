@@ -11,21 +11,23 @@
     }
     .img-pst{
         object-fit: cover;
-        width: 50px;
-        height: 50px;
+        width: 60px;
+        height: 60px;
         border-radius: 10px;
     }
 </style>
 
 <div class="pst">
-    <div class="col-3">
-    {% if user.avatar %}
-    <img class="img-pst" src="{{url_for('static', filename=user.avatar)}}" alt="Generic placeholder image" width="20%">
-    {% else %}
-    <img class="img-pst" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
-    {% endif %}
-    </div>
-    <div class="col-9" id="end">
-    {{item.body}}
+    <div class="row">
+        <div class="col-1">
+        {% if user.avatar %}
+        <img class="img-pst" src="{{url_for('static', filename=user.avatar)}}" alt="Generic placeholder image" width="20%">
+        {% else %}
+        <img class="img-pst" src="{{url_for('static', filename='1.jpg')}}" alt="Generic placeholder image" width="20%">
+        {% endif %}
+        </div>
+        <div class="col" id="end">
+        {{item.body}}
+        </div>
     </div>
 </div>

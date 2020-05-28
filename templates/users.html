@@ -1,14 +1,35 @@
 {% extends "base.html" %}
- 
+
 {% block content %}
-    <h1>Все пользователи</h1>
-    <table>
-        {% for item in users %}
-        <tr>
-            <td>
-                <a type="button" class="btn btn-secondary" href="/index/{{item.id}}"> {{item.username}} </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
+
+<style>
+    .mr-3 {
+        margin-top: -50px;
+    }
+    .container-main {
+        margin-top: 70px;
+    }
+    .col-md-6 {
+        margin-top: 10px;
+        margin-bottom: 0px;
+    }
+    img{
+        object-fit: cover;
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+    }
+</style>
+
+<h1>Все пользователи</h1>
+<div class="container">
+    {% for item in users %}
+    <div class="row">
+        <div class="col">
+            <a type="button" class="btn btn-secondary" href="/index/{{item.id}}"> {{item.username}} </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}

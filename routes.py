@@ -10,10 +10,10 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'webp'])
 
 def follower_notification(email, username):
     send_email("{} is now following you!".format(username),
-               'nast-pota@ya.ru',
+               'nast-pota@yandex.ru',
                [email],
-               render_template("follower.txt", user=username),
-               render_template("follower.html", user=username))
+               render_template("follower.txt", username=username),
+               render_template("follower.html", username=username))
 
 
 def forget_password(email, user):
@@ -102,20 +102,17 @@ def login():
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     session['error'] = 0
-    try:
-        form = RegistrForm()
-        if form.validate_on_submit():
-            username = form.username.data
-            password = form.password.data
-            email = form.email.data
-            user = User(username=username, email=email, about_me='good luck', avatar='1.jpg')
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-            follower_notification(email, username)
-            return redirect('/login')
-    except Exception as e:
-        session["error"] = str(e)
+    form = RegistrForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        email = form.email.data
+        user = User(username=username, email=email, about_me='good luck', avatar='1.jpg')
+        user.set_password(password)
+        db.session.add(user)
+        db.session.commit()
+        follower_notification(email, username)
+        return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
 
